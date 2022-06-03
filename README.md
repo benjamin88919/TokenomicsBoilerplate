@@ -100,6 +100,7 @@ function distributeRewards(uint256 _commission) internal {
     IERC20Token(govToken).mint( msg.sender, govTokenDistro);
   }
 }
+
 First we get the total supply and check if it’s below the maximum supply.
 
 Then we use a simple algorithm to calculate a diminishing supply factor so that the tokens are distributed fast to start with and then slow down as we get closer to the max supply.
