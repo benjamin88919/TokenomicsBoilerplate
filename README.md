@@ -55,6 +55,7 @@ We are using the ERC20-Votes library as well to provide a mechanism for voting a
 
 A constructor function mints a initial one million tokens during migration. These will be split 50/50 between the Uniswap liquidity pool and the staking contract.
 
+```shell
 constructor() ERC20("GovToken", "GOVTKN") ERC20Permit("GovToken") {
   _mint(msg.sender, 1000000 ether);
 }
@@ -63,6 +64,7 @@ Finally we have some ownerOnly functions for minting and burning tokens. The own
 function mint(address _to, uint256 _amount) public onlyOwner {
   _mint(_to, _amount);
 }
+```
 
 
 ## Creating A Liquidity Pool In Hardhat
@@ -90,6 +92,7 @@ If we accept a need to own a contract, manage the data and be able to pause exec
 
 Back to Solidity and we want to give out some governance tokens to users of the protocol to incentivise growth and decentralize the governance.
 
+```shell
 function distributeRewards(uint256 _commission) internal {
   uint256 govTokenSupply = IERC20Token(govToken).totalSupply();
   if (govTokenSupply < govTokenMaxSupply - 1 ether) {
@@ -100,6 +103,7 @@ function distributeRewards(uint256 _commission) internal {
     IERC20Token(govToken).mint( msg.sender, govTokenDistro);
   }
 }
+```
 
 First we get the total supply and check if it’s below the maximum supply.
 
@@ -111,6 +115,7 @@ This does a number of things it increases the longevity of the incentives and it
 
 From within the main contract we can trade MATIC or ETH for GovToken and then use the burn function to destroy those governance tokens we just purchased.
 
+```shell
 function buyBackAndBurn(uint256 _amountIn) internal {
   uint24 poolFee = 3000;
   ISwapRouter.ExactInputSingleParams memory params =
@@ -127,6 +132,7 @@ function buyBackAndBurn(uint256 _amountIn) internal {
   uint256 amountOut = ISwapRouter(uniRouter).exactInputSingle{value: _amountIn}(params);
   IERC20Token(govToken).burn(amountOut);
 }
+```
 This decreases the supply and increases the price on exchange.
 
 ## Testing & Modelling A Distribution Schedule
